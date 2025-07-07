@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}{{ book[0] }}{% endblock %}
+
+{% block content %}
+<h2>{{ book[0] }}</h2>
+<h4><em>{{ book[1] }}</em></h4>
+<p>
+  Voto:
+  {% for i in range(1, 6) %}
+    {% if book[2] >= i %}
+      ★
+    {% elif book[2] >= i - 0.5 %}
+      ☆
+    {% endif %}
+  {% endfor %}
+</p>
+
+{% if book[3] %}
+  <h5>Recensione</h5>
+  <p>{{ book[3] }}</p>
+{% else %}
+  <p><em>Nessuna recensione.</em></p>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-outline-primary mt-3">← Torna indietro</a>
+{% endblock %}
