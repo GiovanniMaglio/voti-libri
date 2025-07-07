@@ -3,8 +3,6 @@ import sqlite3
 from datetime import datetime
 
 app = Flask(__name__)
-if __name__ == '__main__':
-    init_db()
 
 # 🔧 Inizializza il database
 def init_db():
@@ -81,11 +79,7 @@ def subscribe():
     conn.close()
     return redirect(url_for('index'))
 
-if __name__ == '__main__':
-    init_db()
-    app.run(debug=False, host='0.0.0.0')
-    
-
+# 🗑️ Elimina libro
 @app.route('/delete/<int:book_id>', methods=['POST'])
 def delete_book(book_id):
     conn = sqlite3.connect('books.db')
@@ -94,3 +88,7 @@ def delete_book(book_id):
     conn.commit()
     conn.close()
     return redirect(url_for('index'))
+
+if __name__ == '__main__':
+    init_db()
+    app.run(debug=False, host='0.0.0.0')
