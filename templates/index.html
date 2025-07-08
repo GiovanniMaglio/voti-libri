@@ -2,106 +2,88 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <title>RecenSito</title>
+  <title>📚 I miei libri letti</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-      background-color: #f8f8f8;
-    }
-    h1 {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f9;
       color: #333;
+      margin: 0;
+      padding: 2rem;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
+    h1, h2 {
+      text-align: center;
+      color: #2c3e50;
     }
-    th, td {
-      padding: 0.75rem;
-      border-bottom: 1px solid #ccc;
-      text-align: left;
+    .book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .book-card {
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .book-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .book-card a {
+      color: #2980b9;
+      text-decoration: none;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    .book-card p {
+      margin: 0.3rem 0;
     }
     form {
-      margin-top: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    input, textarea, select {
+    input, textarea, button {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.6rem;
       margin: 0.5rem 0 1rem;
-      border: 1px solid #aaa;
-      border-radius: 4px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
     button {
-      padding: 0.5rem 1rem;
-      background-color: #0077cc;
+      background-color: #3498db;
       color: white;
       border: none;
-      border-radius: 4px;
+      font-weight: bold;
       cursor: pointer;
     }
     button:hover {
-      background-color: #005fa3;
-    }
-    .delete-button {
-      background-color: #e74c3c;
-    }
-    .delete-button:hover {
-      background-color: #c0392b;
+      background-color: #2980b9;
     }
   </style>
 </head>
 <body>
-  <h1>📚RecenSito</h1>
-  <p>Benvenuto su RecenSito, il sito di recensione di Giovanni Maglio!</p>
 
-  <h2>I miei libri letti</h2>
-  <table>
-    <tr>
-      <th>Titolo</th>
-      <th>Autore</th>
-      <th>Voto</th>
-      <th>Elimina</th>
-    </tr>
-    {% for book in my_books %}
-    <tr>
-      <td>
-        <a href="{{ url_for('book_detail', book_id=book[0]) }}">
-          {{ book[1] }}
-        </a>
-      </td>
-      <td>{{ book[2] }}</td>
-      <td>{{ book[3] }} ⭐</td>
-      <td>
-        <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="post" style="display:inline;">
-          <button type="submit" class="delete-button">🗑️</button>
-        </form>
-      </td>
-    </tr>
+  <h1>📚 I miei libri letti</h1>
+  <div class="book-grid">
+    {% for book in books %}
+    <div class="book-card">
+      <a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a>
+      <p><strong>Autore:</strong> {{ book[2] }}</p>
+      <p><strong>Voto:</strong> {{ book[3] }} ⭐</p>
+      <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="post">
+        <button type="submit" style="background-color:#e74c3c;">Elimina 🗑️</button>
+      </form>
+    </div>
     {% endfor %}
-  </table>
+  </div>
 
-  <h2>Libri di altri utenti</h2>
-  <table>
-    <tr>
-      <th>Titolo</th>
-      <th>Autore</th>
-      <th>Voto</th>
-    </tr>
-    {% for book in other_books %}
-    <tr>
-      <td>
-        <a href="{{ url_for('book_detail', book_id=book[0]) }}">
-          {{ book[1] }}
-        </a>
-      </td>
-      <td>{{ book[2] }}</td>
-      <td>{{ book[3] }} ⭐</td>
-    </tr>
-    {% endfor %}
-  </table>
-
-  <h3>➕ Aggiungi un libro</h3>
+  <h2>➕ Aggiungi un libro</h2>
   <form action="{{ url_for('add_book') }}" method="post">
     <label for="title">Titolo</label>
     <input type="text" id="title" name="title" required />
@@ -109,20 +91,14 @@
     <label for="author">Autore</label>
     <input type="text" id="author" name="author" required />
 
-    <label for="rating">Voto (1-5, anche mezzi voti)</label>
+    <label for="rating">Voto (1-5)</label>
     <input type="number" step="0.5" min="1" max="5" id="rating" name="rating" required />
 
     <label for="review">Recensione</label>
     <textarea id="review" name="review" rows="4"></textarea>
 
-    <button type="submit">Aggiungi libro</button>
+    <button type="submit">Salva libro</button>
   </form>
 
-  <h2>📩 Iscriviti alla newsletter</h2>
-  <form action="{{ url_for('subscribe') }}" method="post">
-    <label for="email">La tua email</label>
-    <input type="email" id="email" name="email" required />
-    <button type="submit">Iscriviti</button>
-  </form>
 </body>
 </html>
