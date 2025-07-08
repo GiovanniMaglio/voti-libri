@@ -14,72 +14,53 @@ def init_db():
             title TEXT NOT NULL,
             author TEXT NOT NULL,
             rating REAL NOT NULL,
-            review TEXT
-        )
-    ''')
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS newsletter (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT NOT NULL UNIQUE,
-            subscribed_on TEXT
+            review TEXT,
+            owner TEXT NOT NULL,
+            added_on TEXT
         )
     ''')
     conn.commit()
     conn.close()
 
-# 🏠 Homepage: lista dei libri
 @app.route('/')
 def index():
     conn = sqlite3.connect('books.db')
     c = conn.cursor()
-    c.execute('SELECT id, title, author, rating FROM books')
-    books = c.fetchall()
+    c.execute("SELECT id, title, author, rating, review, owner FROM books")
+    all_books = c.fetchall()
     conn.close()
-    return render_template('index.html', books=books)
 
-# ➕ Aggiungi libro
+    miei_libri = [b for b in all_books if b[5].lower() == "giovanni maglio"]
+    altri_libri = [b for b in all_books if b[5].lower() != "giovanni maglio"]
+
+    return render_template("index.html", miei_libri=miei_libri, altri_libri=altri_libri)
+
 @app.route('/add', methods=['POST'])
 def add_book():
     title = request.form['title']
     author = request.form['author']
     rating = float(request.form['rating'])
     review = request.form['review']
-
-    conn = sqlite3.connect('books.db')
-    c = conn.cursor()
-    c.execute('INSERT INTO books (title, author, rating, review) VALUES (?, ?, ?, ?)',
-              (title, author, rating, review))
-    conn.commit()
-    conn.close()
-    return redirect(url_for('index'))
-
-# 📄 Dettaglio libro
-@app.route('/libro/<int:book_id>')
-def book_detail(book_id):
-    conn = sqlite3.connect('books.db')
-    c = conn.cursor()
-    c.execute('SELECT title, author, rating, review FROM books WHERE id = ?', (book_id,))
-    book = c.fetchone()
-    conn.close()
-    return render_template('book.html', book=book)
-
-# 📩 Iscrizione newsletter
-@app.route('/subscribe', methods=['POST'])
-def subscribe():
-    email = request.form['email']
+    owner = request.form['owner'] or "Anonimo"
     now = datetime.now().isoformat()
 
     conn = sqlite3.connect('books.db')
     c = conn.cursor()
-    try:
-        c.execute('INSERT INTO newsletter (email, subscribed_on) VALUES (?, ?)', (email, now))
-        conn.commit()
-    except sqlite3.IntegrityError:
-        pass  # Email già registrata
+    c.execute('INSERT INTO books (title, author, rating, review, owner, added_on) VALUES (?, ?, ?, ?, ?, ?)',
+              (title, author, rating, review, owner, now))
+    conn.commit()
     conn.close()
     return redirect(url_for('index'))
 
-# 🗑️ Elimina libro
+@app.route('/libro/<int:book_id>')
+def book_detail(book_id):
+    conn = sqlite3.connect('books.db')
+    c = conn.cursor()
+    c.execute('SELECT title, author, rating, review, owner FROM books WHERE id = ?', (book_id,))
+    book = c.fetchone()
+    conn.close()
+    return render_template('book.html', book=book)
+
 @app.route('/delete/<int:book_id>', methods=['POST'])
 def delete_book(book_id):
     conn = sqlite3.connect('books.db')
@@ -91,4 +72,4 @@ def delete_book(book_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True)
