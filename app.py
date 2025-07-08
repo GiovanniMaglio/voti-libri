@@ -15,7 +15,7 @@ def init_db():
             author TEXT NOT NULL,
             rating REAL NOT NULL,
             review TEXT,
-            owner TEXT NOT NULL,
+            owner TEXT,
             added_on TEXT
         )
     ''')
@@ -30,10 +30,10 @@ def index():
     all_books = c.fetchall()
     conn.close()
 
-    miei_libri = [b for b in all_books if b[5].lower() == "giovanni maglio"]
-    altri_libri = [b for b in all_books if b[5].lower() != "giovanni maglio"]
+    miei_libri = [b for b in all_books if (b[5] or "").lower() == "giovanni maglio"]
+    altri_libri = [b for b in all_books if (b[5] or "").lower() != "giovanni maglio"]
 
-    return render_template("index.html", miei_libri=miei_libri, altri_libri=altri_libri)
+    return render_template("index.html", my_books=miei_libri, other_books=altri_libri)
 
 @app.route('/add', methods=['POST'])
 def add_book():
@@ -41,7 +41,7 @@ def add_book():
     author = request.form['author']
     rating = float(request.form['rating'])
     review = request.form['review']
-    owner = request.form['owner'] or "Anonimo"
+    owner = request.form.get('owner', '').strip() or "Anonimo"
     now = datetime.now().isoformat()
 
     conn = sqlite3.connect('books.db')

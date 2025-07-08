@@ -1,26 +1,73 @@
-{% extends 'base.html' %}
-{% block title %}{{ book[0] }}{% endblock %}
-
-{% block content %}
-<h2>{{ book[0] }}</h2>
-<h4><em>{{ book[1] }}</em></h4>
-<p>
-  Voto:
-  {% for i in range(1, 6) %}
-    {% if book[2] >= i %}
-      ★
-    {% elif book[2] >= i - 0.5 %}
-      ☆
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Recensione libro</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background-color: #f4f1ec;
+      color: #333;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 2rem;
+      color: #2c3e50;
+    }
+    .meta {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 1rem;
+    }
+    .rating {
+      font-size: 1.2rem;
+      color: #e67e22;
+    }
+    .review {
+      margin-top: 1.5rem;
+      font-style: italic;
+    }
+    a {
+      display: inline-block;
+      margin-top: 2rem;
+      color: #3498db;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>{{ book[1] }}</h1>
+    <div class="meta">
+      <strong>Autore:</strong> {{ book[2] }}<br>
+      <strong>Inserito da:</strong> {{ book[5] or "Anonimo" }}
+    </div>
+    <div class="rating">
+      ⭐ Voto: {{ book[3] }} / 5
+    </div>
+    {% if book[4] %}
+    <div class="review">
+      <h3>Recensione:</h3>
+      <p>{{ book[4] }}</p>
+    </div>
+    {% else %}
+    <div class="review">
+      <p>Nessuna recensione scritta.</p>
+    </div>
     {% endif %}
-  {% endfor %}
-</p>
-
-{% if book[3] %}
-  <h5>Recensione</h5>
-  <p>{{ book[3] }}</p>
-{% else %}
-  <p><em>Nessuna recensione.</em></p>
-{% endif %}
-
-<a href="{{ url_for('index') }}" class="btn btn-outline-primary mt-3">← Torna indietro</a>
-{% endblock %}
+    <a href="{{ url_for('index') }}">⬅️ Torna alla lista dei libri</a>
+  </div>
+</body>
+</html>
