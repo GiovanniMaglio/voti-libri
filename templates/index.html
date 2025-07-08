@@ -2,105 +2,169 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Libreria di Giovanni</title>
+  <title>RecenSito - di Giovanni Maglio</title>
   <style>
     body {
-      font-family: Georgia, serif;
-      background-color: #f0e8dc;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
       margin: 0;
-      padding: 0 2rem;
+      padding: 2rem;
     }
+
     h1, h2 {
+      color: #ffffff;
+    }
+
+    .header {
       text-align: center;
-      color: #3e3e3e;
+      margin-bottom: 2rem;
     }
+
+    .header h1 {
+      font-size: 3rem;
+      margin: 0;
+      color: #ffcc00;
+    }
+
+    .header p {
+      font-size: 1.2rem;
+      color: #bbbbbb;
+    }
+
     .section {
-      margin: 2rem 0;
+      margin-bottom: 3rem;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-    .card {
-      background-color: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      padding: 1rem;
-      transition: transform 0.2s;
-    }
-    .card:hover {
-      transform: scale(1.03);
-    }
-    .card a {
-      text-decoration: none;
-      color: #0077cc;
-    }
-    form input, textarea {
+
+    table {
       width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      border-collapse: collapse;
+      margin-top: 1rem;
     }
+
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #444;
+    }
+
+    a {
+      color: #80dfff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.4rem 0 1rem;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background-color: #1e1e1e;
+      color: #fff;
+    }
+
     button {
-      background-color: #0077cc;
-      color: white;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
+      background-color: #ffcc00;
+      color: #000;
       border: none;
       border-radius: 4px;
       cursor: pointer;
     }
+
     button:hover {
-      background-color: #005fa3;
+      background-color: #e6b800;
     }
-    .delete-btn {
-      background-color: #d33;
-      margin-top: 0.5rem;
+
+    .delete-button {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .delete-button:hover {
+      background-color: #c0392b;
     }
   </style>
 </head>
 <body>
-  <h1>📚 I miei libri</h1>
-  <div class="grid section">
-    {% for book in my_books %}
-      <div class="card">
-        <strong><a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a></strong>
-        <p>Autore: {{ book[2] }}</p>
-        <p>Voto: {{ book[3] }} ⭐</p>
-        <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="post">
-          <button class="delete-btn" type="submit">Elimina</button>
-        </form>
-      </div>
-    {% endfor %}
+
+  <div class="header">
+    <h1>RecenSito</h1>
+    <p>di Giovanni Maglio</p>
   </div>
 
-  <h2>📖 Libri aggiunti dagli utenti</h2>
-  <div class="grid section">
-    {% for book in others_books %}
-      <div class="card">
-        <strong><a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a></strong>
-        <p>Autore: {{ book[2] }}</p>
-        <p>Voto: {{ book[3] }} ⭐</p>
-      </div>
-    {% endfor %}
+  <div class="section">
+    <h2>📚 I miei libri</h2>
+    <table>
+      <tr>
+        <th>Titolo</th>
+        <th>Autore</th>
+        <th>Voto</th>
+        <th>Elimina</th>
+      </tr>
+      {% for book in my_books %}
+      <tr>
+        <td><a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a></td>
+        <td>{{ book[2] }}</td>
+        <td>{{ book[3] }} ⭐</td>
+        <td>
+          <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="post" style="display:inline;">
+            <button type="submit" class="delete-button">🗑️</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
 
-  <h2>➕ Aggiungi un libro</h2>
-  <form action="{{ url_for('add_book') }}" method="post" class="section">
-    <label for="title">Titolo</label>
-    <input type="text" id="title" name="title" required>
+  <div class="section">
+    <h2>📝 Aggiungi un tuo libro</h2>
+    <form action="{{ url_for('add_user_book') }}" method="post">
+      <label for="title">Titolo</label>
+      <input type="text" id="title" name="title" required>
 
-    <label for="author">Autore</label>
-    <input type="text" id="author" name="author" required>
+      <label for="author">Autore</label>
+      <input type="text" id="author" name="author" required>
 
-    <label for="rating">Voto (1-5)</label>
-    <input type="number" id="rating" name="rating" step="0.5" min="1" max="5" required>
+      <label for="rating">Voto</label>
+      <select id="rating" name="rating" required>
+        {% for i in range(1, 11) %}
+          <option value="{{ i/2 }}">{{ i/2 }} ⭐</option>
+        {% endfor %}
+      </select>
 
-    <label for="review">Recensione</label>
-    <textarea id="review" name="review" rows="4"></textarea>
+      <label for="review">Recensione</label>
+      <textarea id="review" name="review" rows="4"></textarea>
 
-    <button type="submit">Aggiungi libro</button>
-  </form>
+      <label for="owner">Il tuo nome (facoltativo)</label>
+      <input type="text" id="owner" name="owner" placeholder="Anonimo">
+
+      <button type="submit">Aggiungi libro</button>
+    </form>
+  </div>
+
+  <div class="section">
+    <h2>🌍 Libri degli utenti</h2>
+    <table>
+      <tr>
+        <th>Titolo</th>
+        <th>Autore</th>
+        <th>Voto</th>
+        <th>Inserito da</th>
+      </tr>
+      {% for book in user_books %}
+      <tr>
+        <td><a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a></td>
+        <td>{{ book[2] }}</td>
+        <td>{{ book[3] }} ⭐</td>
+        <td>{{ book[5] or "Anonimo" }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
 </body>
 </html>
