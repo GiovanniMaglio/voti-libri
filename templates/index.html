@@ -55,6 +55,7 @@
   <h1>📚RecenSito</h1>
   <p>Benvenuto su RecenSito, il sito di recensione di Giovanni Maglio!</p>
 
+  <h2>I miei libri letti</h2>
   <table>
     <tr>
       <th>Titolo</th>
@@ -62,7 +63,7 @@
       <th>Voto</th>
       <th>Elimina</th>
     </tr>
-    {% for book in books %}
+    {% for book in my_books %}
     <tr>
       <td>
         <a href="{{ url_for('book_detail', book_id=book[0]) }}">
@@ -80,7 +81,27 @@
     {% endfor %}
   </table>
 
-  <h2>➕ Aggiungi un libro</h2>
+  <h2>Libri di altri utenti</h2>
+  <table>
+    <tr>
+      <th>Titolo</th>
+      <th>Autore</th>
+      <th>Voto</th>
+    </tr>
+    {% for book in other_books %}
+    <tr>
+      <td>
+        <a href="{{ url_for('book_detail', book_id=book[0]) }}">
+          {{ book[1] }}
+        </a>
+      </td>
+      <td>{{ book[2] }}</td>
+      <td>{{ book[3] }} ⭐</td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h3>➕ Aggiungi un libro</h3>
   <form action="{{ url_for('add_book') }}" method="post">
     <label for="title">Titolo</label>
     <input type="text" id="title" name="title" required />
