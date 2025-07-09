@@ -8,10 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 def _normalize_database_url(url: str) -> str:
-    """
-    Adatta la URL per SQLAlchemy e forza SSL dove serve.
-    Usa il driver psycopg (psycopg3) con 'postgresql+psycopg://'
-    """
     if url.startswith("postgres://"):
         url = url.replace("postgres://", "postgresql+psycopg://", 1)
     if url.startswith("postgresql") and "sslmode" not in url:
