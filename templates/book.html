@@ -49,18 +49,18 @@
 </head>
 <body>
   <div class="container">
-    <h1>{{ book[1] }}</h1>
+    <h1>{{ book.title }}</h1>
     <div class="meta">
-      <strong>Autore:</strong> {{ book[2] }}<br>
-      <strong>Inserito da:</strong> {{ book[5] or "Anonimo" }}
+      <strong>Autore:</strong> {{ book.author }}<br>
+      <strong>Inserito da:</strong> {{ book.owner or "Anonimo" }}
     </div>
     <div class="rating">
-      ⭐ Voto: {{ book[3] }} / 5
+      ⭐ Voto: {{ book.rating }} / 5
     </div>
-    {% if book[4] %}
+    {% if book.review %}
     <div class="review">
       <h3>Recensione:</h3>
-      <p>{{ book[4] }}</p>
+      <p>{{ book.review }}</p>
     </div>
     {% else %}
     <div class="review">

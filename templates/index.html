@@ -161,11 +161,11 @@
         </tr>
         {% for book in my_books %}
         <tr>
-          <td><a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a></td>
-          <td>{{ book[2] }}</td>
-          <td>{{ book[3] }} ⭐</td>
+          <td><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a></td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.rating }} ⭐</td>
           <td>
-            <form action="{{ url_for('delete_book', book_id=book[0]) }}" method="post" style="display:inline;">
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
               <button type="submit" class="delete-button">🗑️</button>
             </form>
           </td>
@@ -185,10 +185,10 @@
         </tr>
         {% for book in other_books %}
         <tr>
-          <td><a href="{{ url_for('book_detail', book_id=book[0]) }}">{{ book[1] }}</a></td>
-          <td>{{ book[2] }}</td>
-          <td>{{ book[3] }} ⭐</td>
-          <td>{{ book[5] or "Anonimo" }}</td>
+          <td><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }}</a></td>
+          <td>{{ book.author }}</td>
+          <td>{{ book.rating }} ⭐</td>
+          <td>{{ book.owner or "Anonimo" }}</td>
         </tr>
         {% endfor %}
       </table>
