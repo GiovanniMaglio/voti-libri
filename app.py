@@ -77,6 +77,14 @@ with app.app_context():
     except Exception as e:
         print("❌ Errore nel creare le tabelle:", e)
 
-# ▶️ Avvio solo in locale (Render usa Gunicorn)
+# ▶️ Avvio dell'app
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    try:
+        with app.app_context():
+            db.create_all()
+        print("Database connesso e tabelle create")
+    except Exception as e:
+        print("Errore di connessione al DB:", e)
+
+    # NON SERVE
+    # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
