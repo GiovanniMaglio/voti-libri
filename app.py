@@ -5,15 +5,16 @@ import os
 
 app = Flask(__name__)
 
-# 🔧 Configurazione database: Supabase o fallback locale
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'DATABASE_URL',
-    'sqlite:///libri.db'
-)
+# 🔧 Configurazione database: Supabase (Render) o fallback locale
+db_uri = os.getenv('DATABASE_URL', 'sqlite:///libri.db')
+if db_uri.startswith("postgres://"):
+    db_uri = db_uri.replace("postgres://", "postgresql+psycopg2://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-print("Connessione DB usata:", app.config['SQLALCHEMY_DATABASE_URI'])  # debug
+print("🔌 Connessione DB usata:", app.config['SQLALCHEMY_DATABASE_URI'])  # debug
 
 # 📚 Modello Book
 class Book(db.Model):
@@ -77,7 +78,7 @@ with app.app_context():
     except Exception as e:
         print("❌ Errore nel creare le tabelle:", e)
 
-# ▶️ Avvio dell'app
+# ▶️ Avvio locale (non usato da Render/Gunicorn)
 if __name__ == '__main__':
     try:
         with app.app_context():
@@ -86,5 +87,4 @@ if __name__ == '__main__':
     except Exception as e:
         print("Errore di connessione al DB:", e)
 
-    # NON SERVE
     # app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
