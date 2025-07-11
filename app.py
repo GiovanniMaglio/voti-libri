@@ -13,9 +13,10 @@ if db_url.startswith("postgres://"):
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
+
 db = SQLAlchemy(app)
 
-# Modello libro
+# Modello libroo
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
