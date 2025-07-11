@@ -1,73 +1,15 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <title>Recensione libro</title>
-  <style>
-    body {
-      font-family: 'Georgia', serif;
-      background-color: #f4f1ec;
-      color: #333;
-      padding: 2rem;
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    h1 {
-      font-size: 2rem;
-      color: #2c3e50;
-    }
-    .meta {
-      font-size: 1rem;
-      color: #666;
-      margin-bottom: 1rem;
-    }
-    .rating {
-      font-size: 1.2rem;
-      color: #e67e22;
-    }
-    .review {
-      margin-top: 1.5rem;
-      font-style: italic;
-    }
-    a {
-      display: inline-block;
-      margin-top: 2rem;
-      color: #3498db;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>{{ book.title }} - Recensione</title>
 </head>
 <body>
-  <div class="container">
-    <h1>{{ book.title }}</h1>
-    <div class="meta">
-      <strong>Autore:</strong> {{ book.author }}<br>
-      <strong>Inserito da:</strong> {{ book.owner or "Anonimo" }}
-    </div>
-    <div class="rating">
-      ⭐ Voto: {{ book.rating }} / 5
-    </div>
-    {% if book.review %}
-    <div class="review">
-      <h3>Recensione:</h3>
-      <p>{{ book.review }}</p>
-    </div>
-    {% else %}
-    <div class="review">
-      <p>Nessuna recensione scritta.</p>
-    </div>
-    {% endif %}
-    <a href="{{ url_for('index') }}">⬅️ Torna alla lista dei libri</a>
-  </div>
+  <h1>{{ book.title }}</h1>
+  <h2>di {{ book.author }}</h2>
+  <p>⭐ Voto: {{ book.rating }}</p>
+  <p><strong>Recensione:</strong> {{ book.review or "Nessuna recensione" }}</p>
+  <p>Inserito da: {{ book.owner }}</p>
+  <a href="{{ url_for('index') }}">🔙 Torna alla lista</a>
 </body>
 </html>
