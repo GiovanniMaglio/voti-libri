@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: recensito
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: recensito-db
+          property: connectionString
+
+databases:
+  - name: recensito-db
