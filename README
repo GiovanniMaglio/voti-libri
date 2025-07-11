@@ -1,2 +1,5 @@
 source venv/bin/activate
 
+git add .
+git commit -m "quello che vuoi"
+git push
